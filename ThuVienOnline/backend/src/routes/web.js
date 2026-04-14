@@ -31,8 +31,12 @@ const {
   getMuonById,
   getAllMuon,
 
+  // xử lý người dùng (độc giả)
   getAllUser,
   updateUser,
+  getUserById,
+  lockUser,
+  deleteUser, // 🔥 MỚI THÊM: Khai báo hàm Xóa Độc giả
 
   //xử lí sách chưa duyệt
   getChoDuyet,
@@ -53,15 +57,16 @@ const {
   getAllTheLoaiAdmin,
   updateDaLaySach,
   xoaDonHoanThanh,
-  getUserById,
-  lockUser,
+
+  // Xử lý nhân viên
   getAllStaff,
   addStaff,
   getStaffById,
   lockStaff,
   updateStaff,
+  deleteStaff, // 🔥 MỚI THÊM: Khai báo hàm Xóa Nhân viên
 
-  // 👇 1. KHAI BÁO HÀM VỪA THÊM Ở ĐÂY
+  // Thống kê
   getAdminStats,
 } = require("../controllers/controller");
 
@@ -80,18 +85,22 @@ router.post("/api/addNxb", addNxb);
 router.put("/api/nxb/:id", updateNxb);
 router.put("/api/xoanxb/:id", deleteNXB);
 
+// API Người dùng (Độc giả)
 router.post("/api/register", register);
 router.post("/api/login", login);
 router.get("/api/user", getAllUser);
 router.get("/api/user/:id", getUserById);
 router.put("/api/user/:id", updateUser);
 router.patch("/api/lockuser/:id", lockUser);
+router.delete("/api/user/:id", deleteUser); // 🔥 MỚI THÊM: Đường dẫn Xóa Độc giả
 
+// API Thể loại
 router.get("/api/theloai", getAllTheLoai);
 router.post("/api/addtheloai", addTheLoai);
 router.get("/api/theloaiadmin", getAllTheLoaiAdmin);
 router.put("/api/xoatheloai/:id", deleteTheLoai);
 
+// API Đơn mượn
 router.post("/api/muon", addDonMuon);
 router.get("/api/muon/:id", getMuonById);
 router.get("/api/muon", getAllMuon);
@@ -105,10 +114,14 @@ router.delete("/api/xoadon/:id", xoaDonMuon);
 router.put("/api/dalaysach/:id", updateDaLaySach);
 router.delete("/api/xoadonhoanthanh/:id", xoaDonHoanThanh);
 
+// API Nhân viên
 router.get("/api/staff", getAllStaff);
 router.post("/api/addstaff", addStaff);
 router.get("/api/staff/:id", getStaffById);
 router.patch("/api/lockstaff/:id", lockStaff);
 router.put("/api/updatestaff/:id", updateStaff);
+router.delete("/api/staff/:id", deleteStaff); // 🔥 MỚI THÊM: Đường dẫn Xóa Nhân viên
+
 router.get("/api/admin/stats", getAdminStats);
+
 module.exports = router;

@@ -153,7 +153,6 @@ const register = async (req, res) => {
 
 const addBook = async (req, res) => {
   try {
-    // ĐÃ SỬA: Thêm MOTA vào đây
     const {
       TENSACH,
       TACGIA,
@@ -192,7 +191,6 @@ const addBook = async (req, res) => {
     const XOA = 0;
     const LUOTMUON = 0;
     
-    // ĐÃ SỬA: Đưa MOTA vào CSDL
     const book = new SACH({
       TENSACH,
       TACGIA,
@@ -256,7 +254,6 @@ const getBookById = async (req, res) => {
   console.log("Xu li trả book qua id");
   try {
     const id = req.params.id;
-    // ĐÃ SỬA: Thêm .populate("THELOAI") vào phía sau
     const book = await SACH.findOne({ _id: id }).populate("MANXB").populate("THELOAI");
     
     res.status(200).json(book);
@@ -268,12 +265,10 @@ const getBookById = async (req, res) => {
 const addNxb = async (req, res) => {
   try {
     const { TENNXB, DIACHI } = req.body;
-    // Kiểm tra nxb đã tồn tại chưa
     const exist = await SACH.findOne({ TENNXB: TENNXB });
     if (exist) return res.status(400).json({ message: "NXB đã tồn tại" });
     const XOA = 0;
     const SOLUONG = 0;
-    // Tạo user mới
     const nxb = new NXB({
       TENNXB,
       DIACHI,
@@ -318,11 +313,14 @@ const addStaff = async (req, res) => {
     const { Username, MatKhau, HoTen, DiaChi, DienThoai } = req.body;
     const exist = await NHANVIEN.findOne({ HoTen: HoTen });
     if (exist) return res.status(400).json({ message: "Nhân viên đã tồn tại" });
+    
+    // Hash mật khẩu trước khi lưu nhân viên
+    const hashedPassword = await bcrypt.hash(MatKhau, 10);
     const XOA = 0;
     const ChucVu = 'NhanVien'
     const staff = new NHANVIEN({
       Username,
-      MatKhau,
+      MatKhau: hashedPassword,
       HoTen,
       DiaChi,
       DienThoai,
@@ -343,7 +341,6 @@ const updateBook = async (req, res) => {
   try {
     console.log("ham cap nhat sach");
     const { id } = req.params;
-    // ĐÃ SỬA: Lấy thêm MOTA
     const {
       TENSACH,
       DONGIA,
@@ -367,7 +364,7 @@ const updateBook = async (req, res) => {
         SOLUONG,
         COVER,
         THELOAI,
-        MOTA, // ĐÃ SỬA: Cập nhật MOTA
+        MOTA, 
       },
       { new: true } 
     );
@@ -414,20 +411,38 @@ const updateUser = async (req, res) => {
   }
 };
 
+// 🔥 HÀM MỚI: Xóa Độc Giả
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = await DOCGIA.findByIdAndDelete(id);
+    
+    if (!deletedUser) {
+      return res.status(404).json({ message: "Không tìm thấy độc giả để xóa" });
+    }
+    
+    res.status(200).json({ message: "Đã xóa độc giả thành công" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Lỗi server khi xóa độc giả" });
+  }
+};
+
 const updateStaff = async (req, res) => {
   try {
     const { id } = req.params;
     const { HoTen,DiaChi, DienThoai, Username, MatKhau } = req.body;
 
+    let updateData = { HoTen, DiaChi, DienThoai, Username };
+    
+    // Nếu có đổi mật khẩu thì hash lại mật khẩu mới
+    if (MatKhau) {
+      updateData.MatKhau = await bcrypt.hash(MatKhau, 10);
+    }
+
     const updatedUser = await NHANVIEN.findByIdAndUpdate(
       id,
-      {
-        HoTen,
-        DiaChi,
-        DienThoai,
-        Username,
-        MatKhau,
-      },
+      updateData,
       { new: true } 
     );
 
@@ -439,6 +454,23 @@ const updateStaff = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+// 🔥 HÀM MỚI: Xóa Nhân viên
+const deleteStaff = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedStaff = await NHANVIEN.findByIdAndDelete(id);
+    
+    if (!deletedStaff) {
+      return res.status(404).json({ message: "Không tìm thấy nhân viên để xóa" });
+    }
+    
+    res.status(200).json({ message: "Đã xóa nhân viên thành công" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Lỗi server khi xóa nhân viên" });
   }
 };
 
@@ -804,6 +836,7 @@ const getDangMuon = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 const getHoanThanh = async (req, res) => {
   try {
     const dgia = await MUON.find({ TrangThai: 4 })
@@ -1003,6 +1036,7 @@ module.exports = {
   getUserById,
   updateUser,
   lockUser,
+  deleteUser, 
   getChoDuyet,
   updateDuyet,
   updateTuChoiDuyet,
@@ -1017,5 +1051,6 @@ module.exports = {
   getStaffById,
   lockStaff,
   updateStaff,
+  deleteStaff, 
   getAdminStats,
 };

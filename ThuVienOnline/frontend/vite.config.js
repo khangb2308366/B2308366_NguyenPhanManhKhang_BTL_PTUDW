@@ -1,11 +1,10 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
-  base: '/B2308366_NguyenPhanManhKhang_BTL_PTUDW/', // 🔥 QUAN TRỌNG
+  base: '/', 
 
   plugins: [
     vue(),
