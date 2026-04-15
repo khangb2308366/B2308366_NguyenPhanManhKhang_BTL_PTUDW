@@ -21,7 +21,7 @@ const {
   getTheLoaiById,
   getAllTheLoai,
   addTheLoai,
-
+  updateTheLoai,
   //xử lí đăng kí, đăng nhập
   register,
   login,
@@ -99,6 +99,7 @@ router.get("/api/theloai", getAllTheLoai);
 router.post("/api/addtheloai", addTheLoai);
 router.get("/api/theloaiadmin", getAllTheLoaiAdmin);
 router.put("/api/xoatheloai/:id", deleteTheLoai);
+router.put("/api/theloai/:id", updateTheLoai);
 
 // API Đơn mượn
 router.post("/api/muon", addDonMuon);

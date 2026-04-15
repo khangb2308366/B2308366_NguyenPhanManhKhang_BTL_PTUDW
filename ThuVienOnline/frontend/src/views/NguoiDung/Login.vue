@@ -40,7 +40,7 @@
 
           <p class="text-center mt-8 text-slate-500 font-medium">
             Chưa có tài khoản?
-            <button @click="toggleForm" class="text-blue-600 font-black hover:text-blue-800 transition-colors ml-1">Đăng ký ngay</button>
+            <button @click="toggleForm" class="text-blue-600 font-black hover:text-blue-800 transition-colors ml-1">Đăng ký</button>
           </p>
         </div>
       </div>
@@ -97,7 +97,7 @@
             <button type="submit" :disabled="isLoading"
               class="w-full py-4 mt-2 rounded-xl bg-slate-900 text-white font-black shadow-lg hover:bg-emerald-500 active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 uppercase tracking-widest text-sm">
               <i v-if="isLoading" class="fa-solid fa-circle-notch animate-spin"></i>
-              {{ isLoading ? 'Đang tạo tài khoản...' : 'Đăng ký làm độc giả' }}
+              {{ isLoading ? 'Đang tạo tài khoản...' : 'Đăng ký' }}
             </button>
           </form>
 

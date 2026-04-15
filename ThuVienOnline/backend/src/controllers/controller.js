@@ -1009,6 +1009,29 @@ const getAdminStats = async (req, res) => {
   }
 };
 
+// 🔥 HÀM MỚI: Cập nhật Thể Loại
+const updateTheLoai = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { TenTheLoai } = req.body;
+    
+    const updatedTheLoai = await LOAI.findByIdAndUpdate(
+      id,
+      { TenTheLoai },
+      { new: true } 
+    );
+
+    if (!updatedTheLoai) {
+      return res.status(404).json({ message: "Không tìm thấy thể loại" });
+    }
+
+    res.status(200).json(updatedTheLoai);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
 module.exports = {
   getAllBook,
   addBook,
@@ -1053,4 +1076,5 @@ module.exports = {
   updateStaff,
   deleteStaff, 
   getAdminStats,
+  updateTheLoai,
 };

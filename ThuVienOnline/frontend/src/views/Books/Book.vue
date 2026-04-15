@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto px-6 py-16 min-h-screen bg-gray-50/50">
     
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-12 border-b border-gray-100 pb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-gray-100 pb-8">
       <div>
         <h2 class="text-4xl font-extrabold text-gray-950 tracking-tight">
           Tất Cả Sách
@@ -19,21 +19,43 @@
       </button>
     </div>
 
+    <div class="mb-12 flex flex-wrap gap-3 items-center">
+      <span class="text-sm font-black uppercase tracking-widest text-gray-400 mr-2">Lọc theo:</span>
+      
+      <button 
+        @click="selectedCategory = 'all'"
+        :class="selectedCategory === 'all' ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
+        class="px-5 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95"
+      >
+        Tất cả sách
+      </button>
+
+      <button 
+        v-for="cat in categoryList" 
+        :key="cat._id"
+        @click="selectedCategory = cat.TenTheLoai"
+        :class="selectedCategory === cat.TenTheLoai ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
+        class="px-5 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95"
+      >
+        {{ cat.TenTheLoai }}
+      </button>
+    </div>
+
     <div v-if="isLoading" class="flex justify-center items-center h-60">
       <div class="animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-green-500"></div>
     </div>
 
-    <div v-else-if="books.length === 0" class="text-center text-gray-500 py-24 text-lg bg-white rounded-3xl shadow-sm border border-gray-100">
+    <div v-else-if="filteredBooks.length === 0" class="text-center text-gray-500 py-24 text-lg bg-white rounded-3xl shadow-sm border border-gray-100">
       <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-         <i class="fa-solid fa-book-open text-5xl text-gray-300"></i>
+         <i class="fa-solid fa-magnifying-glass text-5xl text-gray-300"></i>
       </div>
-      <p class="font-bold text-gray-600">Hiện tại chưa có cuốn sách nào trong thư viện.</p>
-      <p class="text-sm mt-2">Vui lòng quay lại sau hoặc thêm sách mới từ Admin Panel.</p>
+      <p class="font-bold text-gray-600">Không tìm thấy cuốn sách nào thuộc thể loại "{{ selectedCategory }}".</p>
+      <button @click="selectedCategory = 'all'" class="mt-4 text-green-600 font-bold hover:underline">Quay lại xem tất cả</button>
     </div>
 
     <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
       <div 
-        v-for="book in books" 
+        v-for="book in filteredBooks" 
         :key="book._id" 
         @click="goToDetail(book._id)"
         class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col cursor-pointer group transform hover:-translate-y-2"
@@ -43,12 +65,16 @@
             :src="book.COVER || '/images/placeholder.jpg'" 
             :alt="book.TENSACH" 
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            @error="(e) => e.target.src='/images/placeholder.jpg'"
+            @error="(e) => e.target.src='https://placehold.co/400x600?text=No+Cover'"
           />
           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
           
           <span v-if="book.SOLUONG === 0" class="absolute top-4 right-4 bg-red-100 text-red-700 px-3 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest shadow-sm">
             Hết sách
+          </span>
+
+          <span class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md text-gray-800 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border border-gray-100">
+            {{ book.THELOAI?.TenTheLoai || 'Chưa phân loại' }}
           </span>
         </div>
         
@@ -72,25 +98,35 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 // 1. KHAI BÁO BIẾN
 const router = useRouter();
-const books = ref([]); // Mảng chứa dữ liệu sách
-const isLoading = ref(true); // Trạng thái loading quay quay
+const books = ref([]); 
+const categoryList = ref([]); // 🔥 Danh sách thể loại từ Backend
+const selectedCategory = ref('all'); // 🔥 Thể loại đang được chọn (mặc định là 'all')
+const isLoading = ref(true);
 
-// Quản lý trạng thái user (Để ẩn/hiện nút Thêm sách)
 const auth = reactive({
   isLoggedIn: false,
-  role: 1 // 1: User thường, 2: Nhân viên, 3: Admin
+  role: 1 
 });
 
-// 2. HÀM KIỂM TRA ĐĂNG NHẬP
+// 2. LOGIC LỌC SÁCH
+// Hàm này sẽ tự động chạy lại mỗi khi biến selectedCategory thay đổi
+const filteredBooks = computed(() => {
+  if (selectedCategory.value === 'all') {
+    return books.value; // Trả về toàn bộ nếu chọn Tất cả
+  }
+  // Lọc sách có Tên thể loại trùng với cái đang chọn
+  return books.value.filter(book => book.THELOAI?.TenTheLoai === selectedCategory.value);
+});
+
+// 3. HÀM KIỂM TRA ĐĂNG NHẬP
 const checkAuth = () => {
   try {
-    // Lấy thông tin user từ localStorage (do trang Login của bạn lưu vào)
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       auth.isLoggedIn = true;
@@ -101,34 +137,41 @@ const checkAuth = () => {
   }
 };
 
-// 3. HÀM GỌI API LẤY SÁCH TỪ BACKEND
-const fetchBooks = async () => {
-  isLoading.value = true;
+// 4. HÀM LẤY DANH SÁCH THỂ LOẠI
+const fetchCategories = async () => {
   try {
-    // Gọi route /api/sach để lấy danh sách sách có XOA: 0
-    const response = await axios.get('http://localhost:3000/api/sach');
-    books.value = response.data; // Đổ dữ liệu vào biến books
+    const response = await axios.get('http://localhost:3000/api/theloai');
+    categoryList.value = response.data;
   } catch (error) {
-    console.error("Lỗi khi lấy danh sách sách:", error);
-  } finally {
-    isLoading.value = false; // Tắt vòng quay loading
+    console.error("Lỗi khi lấy thể loại:", error);
   }
 };
 
-// 4. HÀM ĐỊNH DẠNG TIỀN TỆ (VD: 5000 -> 5.000)
+// 5. HÀM LẤY DANH SÁCH SÁCH
+const fetchBooks = async () => {
+  isLoading.value = true;
+  try {
+    const response = await axios.get('http://localhost:3000/api/sach');
+    books.value = response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách sách:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 const formatPrice = (price) => {
   if (!price) return '0';
   return new Intl.NumberFormat('vi-VN').format(price);
 };
 
-// 5. HÀM CHUYỂN SANG TRANG CHI TIẾT SÁCH
 const goToDetail = (id) => {
   router.push(`/book/${id}`);
 };
 
-// 6. CHẠY HÀM KHI VỪA MỞ TRANG
 onMounted(() => {
   checkAuth();
   fetchBooks();
+  fetchCategories(); // 🔥 Gọi thêm hàm này khi mở trang
 });
 </script>
