@@ -83,7 +83,6 @@
 </template>
 
 <script setup>
-// Hàm xử lý khi ảnh nền bị lỗi (không load được)
 const handleImageError = (event) => {
   if (event.target) {
     event.target.style.display = 'none';

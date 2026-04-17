@@ -105,8 +105,8 @@ import { useRouter } from 'vue-router';
 // 1. KHAI BÁO BIẾN
 const router = useRouter();
 const books = ref([]); 
-const categoryList = ref([]); // 🔥 Danh sách thể loại từ Backend
-const selectedCategory = ref('all'); // 🔥 Thể loại đang được chọn (mặc định là 'all')
+const categoryList = ref([]); 
+const selectedCategory = ref('all'); 
 const isLoading = ref(true);
 
 const auth = reactive({
@@ -115,12 +115,10 @@ const auth = reactive({
 });
 
 // 2. LOGIC LỌC SÁCH
-// Hàm này sẽ tự động chạy lại mỗi khi biến selectedCategory thay đổi
 const filteredBooks = computed(() => {
   if (selectedCategory.value === 'all') {
-    return books.value; // Trả về toàn bộ nếu chọn Tất cả
+    return books.value; 
   }
-  // Lọc sách có Tên thể loại trùng với cái đang chọn
   return books.value.filter(book => book.THELOAI?.TenTheLoai === selectedCategory.value);
 });
 
@@ -172,6 +170,6 @@ const goToDetail = (id) => {
 onMounted(() => {
   checkAuth();
   fetchBooks();
-  fetchCategories(); // 🔥 Gọi thêm hàm này khi mở trang
+  fetchCategories();
 });
 </script>

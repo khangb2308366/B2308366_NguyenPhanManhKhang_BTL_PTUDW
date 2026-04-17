@@ -158,16 +158,16 @@ const getStatusText = (status) => {
 
 const getStatusClass = (status) => {
   const classes = {
-    0: 'bg-amber-50 text-amber-600 border-amber-100', // Chờ duyệt
-    1: 'bg-emerald-50 text-emerald-600 border-emerald-100', // Chưa lấy
-    2: 'bg-blue-50 text-blue-600 border-blue-100', // Đang mượn
-    3: 'bg-red-50 text-red-600 border-red-100', // Từ chối
-    4: 'bg-slate-50 text-slate-500 border-slate-100' // Hoàn thành
+    0: 'bg-amber-50 text-amber-600 border-amber-100',
+    1: 'bg-emerald-50 text-emerald-600 border-emerald-100', 
+    2: 'bg-blue-50 text-blue-600 border-blue-100', 
+    3: 'bg-red-50 text-red-600 border-red-100', 
+    4: 'bg-slate-50 text-slate-500 border-slate-100' 
   };
   return classes[status] || 'bg-slate-50 text-slate-400';
 };
 
-// HÀM KIỂM TRA QUÁ HẠN (Tô đỏ ngày nếu quá hạn chưa trả)
+// HÀM KIỂM TRA QUÁ HẠN 
 const isOverdue = (ngayTra, trangThai) => {
   if (trangThai === 4 || trangThai === 3 || trangThai === 0) return false;
   const deadline = new Date(ngayTra);
@@ -177,7 +177,6 @@ const isOverdue = (ngayTra, trangThai) => {
 </script>
 
 <style scoped>
-/* Ẩn thanh cuộn thừa để nhìn gọn hơn */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

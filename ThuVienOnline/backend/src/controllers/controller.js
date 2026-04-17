@@ -339,44 +339,40 @@ const addStaff = async (req, res) => {
 
 const updateBook = async (req, res) => {
   try {
-    console.log("ham cap nhat sach");
     const { id } = req.params;
-    const {
-      TENSACH,
-      DONGIA,
-      COVER,
-      SOLUONG,
-      NAMXUATBAN,
-      MANXB,
-      TACGIA,
-      THELOAI,
-      MOTA 
-    } = req.body;
+    const { TENSACH, TACGIA, SOLUONG, DONGIA, TheLoai, TENNXB, NAMXUATBAN, COVER, MOTA } = req.body;
+
+    const nxb = await NXB.findOne({ TENNXB: TENNXB });
+    const theloai = await LOAI.findOne({ TenTheLoai: TheLoai });
+
+    if (!nxb || !theloai) {
+      return res.status(400).json({ message: "Không tìm thấy NXB hoặc Thể loại trong hệ thống!" });
+    }
 
     const updatedBook = await SACH.findByIdAndUpdate(
       id,
       {
         TENSACH,
         TACGIA,
-        DONGIA,
-        NAMXUATBAN,
-        MANXB,
         SOLUONG,
+        DONGIA,
+        THELOAI: theloai._id, 
+        MANXB: nxb._id,       
+        NAMXUATBAN,
         COVER,
-        THELOAI,
-        MOTA, 
+        MOTA
       },
       { new: true } 
     );
 
     if (!updatedBook) {
-      return res.status(404).json({ message: "Không tìm thấy sách" });
+      return res.status(404).json({ message: "Không tìm thấy sách để cập nhật!" });
     }
 
-    res.status(200).json(updatedBook);
+    res.status(200).json({ message: "Cập nhật thành công", data: updatedBook });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Lỗi server" });
+    console.error("Lỗi update sách:", err);
+    res.status(500).json({ message: "Lỗi hệ thống khi cập nhật sách!" });
   }
 };
 
@@ -1009,7 +1005,6 @@ const getAdminStats = async (req, res) => {
   }
 };
 
-// 🔥 HÀM MỚI: Cập nhật Thể Loại
 const updateTheLoai = async (req, res) => {
   try {
     const { id } = req.params;

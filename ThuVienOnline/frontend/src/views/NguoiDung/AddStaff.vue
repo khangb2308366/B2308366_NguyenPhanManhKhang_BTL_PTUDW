@@ -66,7 +66,6 @@ const emit = defineEmits(["close", "refresh"]);
 
 const staffData = reactive({ hoten: "", diachi: "", dienthoai: "", username: "", matkhau: "" });
 
-// Tự động điền dữ liệu nếu là Edit
 onMounted(() => {
   if (props.isEditing && props.staff) {
     staffData.hoten = props.staff.HoTen || "";
@@ -90,11 +89,9 @@ const onSubmitStaff = async () => {
 
   try {
     if (props.isEditing) {
-      // ĐÃ SỬA: Đổi thành 'updatestaff' cho khớp với Backend
       await axios.put(`http://localhost:3000/api/updatestaff/${props.staff._id}`, payload);
       await Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã cập nhật thông tin nhân viên', confirmButtonColor: '#3b82f6', customClass: { popup: 'rounded-[2rem]' } });
     } else {
-      // ĐÃ SỬA: Đổi thành 'addstaff' viết thường toàn bộ cho khớp Backend
       await axios.post("http://localhost:3000/api/addstaff", payload);
       await Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã tạo tài khoản nhân viên mới', confirmButtonColor: '#3b82f6', customClass: { popup: 'rounded-[2rem]' } });
     }

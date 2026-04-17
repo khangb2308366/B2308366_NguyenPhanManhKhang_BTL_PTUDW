@@ -92,12 +92,12 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Thêm SweetAlert2
-import { useCartStore } from '../../stores/cart'; // Đảm bảo đường dẫn này trỏ đúng vào file cart.js bạn vừa tạo
+import Swal from 'sweetalert2'; 
+import { useCartStore } from '../../stores/cart'; 
 
 const route = useRoute();
 const router = useRouter();
-const cartStore = useCartStore(); // Khởi tạo Giỏ hàng
+const cartStore = useCartStore(); 
 
 const book = ref(null);
 const isLoading = ref(true);
@@ -140,10 +140,9 @@ const handleBorrow = () => {
       text: result.message,
       showConfirmButton: false,
       timer: 1500,
-      customClass: { popup: 'rounded-[2rem]' } // Bo góc cho đồng bộ UI
+      customClass: { popup: 'rounded-[2rem]' } 
     });
   } else {
-    // Thông báo lỗi nếu sách đã có trong giỏ hoặc mượn quá 5 cuốn
     Swal.fire({
       icon: 'warning',
       title: 'Khoan đã...',

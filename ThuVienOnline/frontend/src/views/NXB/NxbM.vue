@@ -3,12 +3,6 @@
     <h1 class="font-extrabold text-2xl p-4 text-center mb-5 pt-10 text-white">
       Quản Lí Nhà xuất bản
     </h1>
-    <!-- <div
-      class="text-xl font-bold text-gray-500 bg-white px-4 py-6 shadow-lg rounded-xl w-[20%] ml-5"
-    >
-      Số sách hiện có :
-      <span class="text-red-700 font-bold text-2xl">{{ 4 }}</span>
-    </div> -->
     <div>
       <input
         v-model="query"
@@ -204,10 +198,9 @@ const filteredData = computed(() => {
 const showEditModal = ref(false);
 const selectedNxbId = ref(null);
 
-// Hàm khi click vào icon chỉnh sửa
 const editNXB = (id) => {
-  selectedNxbId.value = id; // lưu _id sách
-  showEditModal.value = true; // mở modal/component con
+  selectedNxbId.value = id; 
+  showEditModal.value = true; 
 };
 
 const bk = ref(null);
@@ -215,7 +208,6 @@ const deleteNXB = ref(false);
 
 const onDelete = async (id) => {
   try {
-    // Map dữ liệu từ form sang backend
     const payload = {
       XOA: 1,
     };

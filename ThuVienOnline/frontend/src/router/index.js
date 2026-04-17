@@ -19,10 +19,10 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/book", name: "Book", component: Book },
   
-  // Trang chi tiết sách (Sử dụng tham số động :id)
+  // Trang chi tiết sách 
   { path: "/book/:id", name: "BookDetail", component: BookDetail },
   
-  // Trang thêm sách mới (Dùng nếu bạn không dùng Modal ở trang Admin)
+  // Trang thêm sách mới
   { path: "/addbook", name: "AddBook", component: AddBook },
 
   { path: "/admin", name: "Admin", component: Admin },

@@ -12,7 +12,6 @@ const isLoading = ref(true);
 const fetchUserProfile = async () => {
   isLoading.value = true;
   try {
-    // SỬA LỖI: Lấy ID từ authStore thay vì tự parse localStorage thủ công
     const userId = authStore.user?.id || authStore.user?.user?.id;
     
     if (!userId) {
@@ -21,16 +20,13 @@ const fetchUserProfile = async () => {
       return;
     }
 
-    // Gọi API lấy dữ liệu chi tiết
     const response = await axios.get(`http://localhost:3000/api/user/${userId}`);
     user.value = response.data;
     
   } catch (error) {
     console.error("Lỗi khi tải hồ sơ:", error);
-    // Nếu lỗi token hoặc hết hạn thì cho về login
     if (error.response?.status === 401) router.push('/login');
   } finally {
-    // Cho loading chạy thêm tí cho mượt hiệu ứng
     setTimeout(() => { isLoading.value = false; }, 500);
   }
 };

@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     isLoggedIn: false,
-    user: null, // chứa HoTen, role, id từ backend
-    role: null, // 1: Độc giả, 2: Nhân viên, 3: Admin
-    token: null, // BẮT BUỘC PHẢI CÓ ĐỂ GỌI API BẢO MẬT
+    user: null, 
+    role: null, 
+    token: null, 
   }),
 
   getters: {
@@ -15,12 +15,11 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
-    // Sửa lại nhận data từ api login
     login(data) {
       this.isLoggedIn = true;
       this.user = data.user;
       this.role = data.user.role;
-      this.token = data.token; // Lưu lại token
+      this.token = data.token; 
     },
 
     logout() {

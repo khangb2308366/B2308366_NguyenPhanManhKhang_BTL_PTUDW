@@ -136,7 +136,7 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // Import axios để gọi API
+import axios from 'axios'; 
 
 const router = useRouter();
 const isVisible = ref(false);
@@ -145,7 +145,7 @@ const box = ref(null);
 const box1 = ref(null);
 
 // ==========================================
-// CHỨC NĂNG TÌM KIẾM TRỰC TIẾP (LIVE SEARCH)
+// CHỨC NĂNG TÌM KIẾM TRỰC TIẾP 
 // ==========================================
 const allBooks = ref([]);
 const searchQuery = ref('');
@@ -162,38 +162,28 @@ const fetchBooks = async () => {
 };
 
 // Bộ lọc tự động chạy khi bạn gõ chữ
-// Bộ lọc tự động chạy khi bạn gõ chữ
 const suggestedBooks = computed(() => {
   if (!searchQuery.value.trim()) return [];
   const query = searchQuery.value.toLowerCase();
   
   return allBooks.value.filter(book => {
-    // Quét Tên sách
     const matchName = book.TENSACH?.toLowerCase().includes(query);
-    // Quét Tác giả
     const matchAuthor = book.TACGIA?.toLowerCase().includes(query);
-    // Quét Thể loại (MỚI THÊM)
     const matchGenre = book.THELOAI?.TenTheLoai?.toLowerCase().includes(query);
-    
-    // Nếu gõ trúng 1 trong 3 cái trên thì đều vớt ra hết
-    return matchName || matchAuthor || matchGenre;
+        return matchName || matchAuthor || matchGenre;
   }).slice(0, 5); 
 });
 
-// Chuyển hướng khi bấm vào 1 sách trong danh sách gợi ý
 const goToDetail = (id) => {
   router.push(`/book/${id}`);
 };
 
-// ==========================================
-// CÁC HÀM CŨ
-// ==========================================
 const gotoBook = () => {
   router.push('/book');
 };
 
 onMounted(() => {
-  fetchBooks(); // Nạp danh sách sách ngay khi load trang
+  fetchBooks();
   
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -208,7 +198,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Giữ nguyên toàn bộ style cũ của bạn */
 .bg-zoom {
   position: relative;
   width: 100%;

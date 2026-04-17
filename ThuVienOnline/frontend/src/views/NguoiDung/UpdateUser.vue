@@ -145,7 +145,6 @@ onMounted(async () => {
   }
 });
 
-// Khi bookId thay đổi, load dữ liệu sách
 watch(
   [() => props.id],
   async ([id]) => {
@@ -162,30 +161,19 @@ watch(
       updateUser.Phai = userData.value.Phai;
       const d = new Date(userData.value.NgaySinh);
       const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, "0"); // Tháng trong JS bắt đầu từ 0
+      const mm = String(d.getMonth() + 1).padStart(2, "0"); 
       const dd = String(d.getDate()).padStart(2, "0");
 
-      // Định dạng bắt buộc cho input type="date": YYYY-MM-DD
       updateUser.NgaySinh = `${yyyy}-${mm}-${dd}`;
     }
   },
   { immediate: true }
 );
 
-// const updateUser = reactive({
-//   name: userData.value.TENSACH,
-//   price: bookData.value.DONGIA,
-//   cover: bookData.value.COVER,
-//   soLuong: bookData.value.SOLUONG,
-//   namXuatBan: bookData.value.NAMXUATBAN,
-//   nxb: bookData.value.MANXB,
-//   author: bookData.value.TACGIA,
-// });
 const emit = defineEmits(["close"]);
 
 const saveChanges = async () => {
   try {
-    // Map dữ liệu từ form sang backend
     const payload = {
       Ho: updateUser.ho,
       Ten: updateUser.ten,

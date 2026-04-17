@@ -178,7 +178,6 @@ const getStatusClass = (status) => {
   return classes[status] || 'bg-slate-50 text-slate-400';
 };
 
-// HÀNH ĐỘNG HỦY ĐƠN (Dùng Swal)
 const confirmHuyDon = async (id) => {
   const result = await Swal.fire({
     title: 'Hủy đơn mượn?',

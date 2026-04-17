@@ -177,7 +177,6 @@ watch(
         updateBook.namXuatBan = bookData.value.NAMXUATBAN;
         updateBook.nxb = bookData.value.MANXB?.TENNXB || "";
         updateBook.author = bookData.value.TACGIA;
-        // Chú ý: Backend populate THELOAI nên cần lấy TenTheLoai
         updateBook.type = bookData.value.THELOAI?.TenTheLoai || "";
       } catch (err) {
         console.error("Lỗi load chi tiết sách:", err);
@@ -189,7 +188,7 @@ watch(
 
 const saveChanges = async () => {
   try {
-    // Tìm ID của NXB và Thể Loại dựa trên Tên (vì trong Select lưu Tên)
+    // Tìm ID của NXB và Thể Loại dựa trên Tên 
     const selectedNxbId = nxbs.value.find((n) => n.TENNXB === updateBook.nxb)?._id;
     const selectedTypeId = theLoais.value.find((t) => t.TenTheLoai === updateBook.type)?._id;
 

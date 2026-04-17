@@ -17,10 +17,10 @@
           <i class="fa-solid fa-book-bookmark w-5 text-center text-lg"></i> Quản lí Sách
         </div>
         <div @click="activeTab = 'publishers'" :class="activeTab === 'publishers' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-700/50 hover:text-white'" class="flex items-center gap-3 p-3.5 rounded-2xl transition-all cursor-pointer font-bold text-sm">
-          <i class="fa-solid fa-building-columns w-5 text-center text-lg"></i> Nhà Xuất Bản
+          <i class="fa-solid fa-building-columns w-5 text-center text-lg"></i> Quản lí Nhà Xuất Bản
         </div>
         <div @click="activeTab = 'categories'" :class="activeTab === 'categories' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-700/50 hover:text-white'" class="flex items-center gap-3 p-3.5 rounded-2xl transition-all cursor-pointer font-bold text-sm">
-          <i class="fa-solid fa-tags w-5 text-center text-lg"></i> Thể Loại
+          <i class="fa-solid fa-tags w-5 text-center text-lg"></i> Quản lí Thể Loại
         </div>
         <div @click="activeTab = 'orders'" :class="activeTab === 'orders' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-700/50 hover:text-white'" class="flex items-center gap-3 p-3.5 rounded-2xl transition-all cursor-pointer font-bold text-sm">
           <i class="fa-solid fa-hand-holding-heart w-5 text-center text-lg"></i> Quản lí Đơn mượn
@@ -292,7 +292,7 @@ const isEditing = ref(false);
 const editId = ref(null);
 const newBook = reactive({ TENSACH: '', TACGIA: '', SOLUONG: 1, DONGIA: 0, TheLoai: '', TENNXB: '', NAMXUATBAN: new Date().getFullYear(), COVER: '', MOTA: '' });
 
-// 🔥 MỚI: STATE NXB & THỂ LOẠI
+//  STATE NXB & THỂ LOẠI
 const showNxbModal = ref(false);
 const isEditingNxb = ref(false);
 const editNxbId = ref(null);
@@ -343,7 +343,7 @@ const handleDeleteBook = async (id, name) => {
   if (result.isConfirmed) { try { await axios.put(`http://localhost:3000/api/xoasach/${id}`); showNotification('Đã xóa sách!'); fetchStats(); fetchBooks(); } catch (e) {} }
 };
 
-// 🔥 MỚI: QUẢN LÝ NXB
+// QUẢN LÝ NXB
 const openAddNxbModal = () => { isEditingNxb.value = false; Object.assign(newNxb, { TENNXB: '', DIACHI: '' }); showNxbModal.value = true; };
 const openEditNxbModal = (nxb) => { isEditingNxb.value = true; editNxbId.value = nxb._id; Object.assign(newNxb, { TENNXB: nxb.TENNXB, DIACHI: nxb.DIACHI }); showNxbModal.value = true; };
 const closeNxbModal = () => showNxbModal.value = false;
@@ -361,7 +361,7 @@ const handleDeleteNxb = async (id, name) => {
   if (result.isConfirmed) { try { await axios.put(`http://localhost:3000/api/xoanxb/${id}`); showNotification('Đã xóa NXB!'); fetchNxbs(); } catch (e) {} }
 };
 
-// 🔥 MỚI: QUẢN LÝ THỂ LOẠI
+// QUẢN LÝ THỂ LOẠI
 const openAddCatModal = () => { isEditingCat.value = false; Object.assign(newCat, { TenTheLoai: '' }); showCatModal.value = true; };
 const openEditCatModal = (cat) => { isEditingCat.value = true; editCatId.value = cat._id; Object.assign(newCat, { TenTheLoai: cat.TenTheLoai }); showCatModal.value = true; };
 const closeCatModal = () => showCatModal.value = false;

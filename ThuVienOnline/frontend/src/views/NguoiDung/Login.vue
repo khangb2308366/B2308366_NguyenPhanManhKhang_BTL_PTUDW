@@ -175,9 +175,6 @@ const onLogin = async () => {
 
     authStore.login(res.data); 
 
-    // 🔥 ĐÃ SỬA CHỖ NÀY:
-    // Chỉ những ai có role = 2 (Nhân Viên) hoặc role = 3 (Admin) thì mới vào '/admin'
-    // Độc giả (role = 1) sẽ được chuyển về Trang Chủ '/'
     if (res.data.user.role == 2 || res.data.user.role == 3) {
       router.push("/admin");
     } else {
